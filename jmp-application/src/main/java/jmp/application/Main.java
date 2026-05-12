@@ -9,6 +9,7 @@ import jmp.dto.BankCard;
 import jmp.dto.BankCardType;
 import jmp.dto.User;
 import jmp.service.api.Service;
+import jmp.service.api.exception.SubscriptionNotFoundException;
 
 import java.time.LocalDate;
 
@@ -16,8 +17,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        var user1 = new User("Ivan", "Ivanov", LocalDate.of(1990, 1, 1));
-        var user2 = new User("Petr", "Petrov", LocalDate.of(1991, 5, 10));
+        var user1 = new User("Ivan", "Ivanov", LocalDate.of(2020, 1, 1));
+        var user2 = new User("Petr", "Petrov", LocalDate.of(1945, 5, 10));
 
         System.out.println("Users created:");
         System.out.println(user1);
@@ -33,7 +34,7 @@ public class Main {
 
         Service service = new ServiceImlp();
 
-        service.subscribe(card1);
+        // service.subscribe(card1);
         service.subscribe(card2);
         service.subscribe(card3);
 
@@ -45,8 +46,11 @@ public class Main {
         System.out.println();
         System.out.println(card3);
 
-        var subscription1 = service.getSubscriptionByBankCardNumber(card1.getNumber());
+        var subscription1 = service.getSubscriptionByBankCardNumber(card1.getNumber())
+                .orElseThrow(() -> new SubscriptionNotFoundException(card1.getNumber())); // task 21
+
         var subscription2 = service.getSubscriptionByBankCardNumber(card2.getNumber());
+
         var subscription3 = service.getSubscriptionByBankCardNumber(card3.getNumber());
 
         System.out.println();
@@ -62,6 +66,17 @@ public class Main {
         System.out.println();
         System.out.println("All users:");
         service.getAllUsers().forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("Average users age:");
+        System.out.println(service.getAverageUsersAge());
+
+        System.out.println();
+        boolean payable1 = Service.isPayableUser(user1);
+        System.out.println("Is user payable: " + payable1);
+        System.out.println();
+        boolean payable2 = Service.isPayableUser(user2);
+        System.out.println("Is user payable: " + payable2);
 
     }
 }

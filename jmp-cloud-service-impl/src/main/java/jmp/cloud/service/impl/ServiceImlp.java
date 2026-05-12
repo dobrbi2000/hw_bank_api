@@ -33,7 +33,7 @@ public class ServiceImlp implements Service {
     public Optional<Subscription> getSubscriptionByBankCardNumber(String bankCardNumber) {
         return subscriptions.values()
                 .stream()
-                .filter(subscription -> subscription.getBankcardNumber().equals(bankCardNumber))
+                .filter(s -> s.getBankcardNumber().equals(bankCardNumber))
                 .findFirst();
 
     }
@@ -42,9 +42,9 @@ public class ServiceImlp implements Service {
     public List<User> getAllUsers() {
         return bankCards.values()
                 .stream()
-                .map(BankCard::getUser)
+                .map(BankCard::getUser) // task 20
                 .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList()); // task 20
     }
 
 }
