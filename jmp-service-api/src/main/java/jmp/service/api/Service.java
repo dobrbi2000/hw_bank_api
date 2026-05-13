@@ -4,10 +4,11 @@ import jmp.dto.BankCard;
 import jmp.dto.Subscription;
 import jmp.dto.User;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public interface Service {
     void subscribe(BankCard bankCard);
@@ -15,6 +16,8 @@ public interface Service {
     Optional<Subscription> getSubscriptionByBankCardNumber(String bankCardNumber);
 
     List<User> getAllUsers();
+
+    List<Subscription> getAllSubscriptionsByCondition(Predicate<Subscription> condition); // task 22
 
     static long calculateAge(User user) {
         return ChronoUnit.YEARS.between(

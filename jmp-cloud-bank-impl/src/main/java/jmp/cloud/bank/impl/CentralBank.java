@@ -1,6 +1,7 @@
 package jmp.cloud.bank.impl;
 
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 import jmp.bank.api.Bank;
 import jmp.dto.User;
@@ -15,9 +16,16 @@ public class CentralBank implements Bank {
     public BankCard createBankCard(User user, BankCardType cardType) {
 
         var cardNumber = "CB-" + UUID.randomUUID();
-        if (cardType == BankCardType.CREDIT) {
-            return new CreditBankCard(cardNumber, user);
-        }
-        return new DebitBankCard(cardNumber, user);
+
+        // if (cardType == BankCardType.CREDIT) {
+        // return new CreditBankCard(cardNumber, user);
+        // }
+        // return new DebitBankCard(cardNumber, user);
+
+        BiFunction<String, User, BankCard> factory = cardType == BankCardType.CREDIT
+                ? CreditBankCard::new
+                : DebitBankCard::new;
+        return factory.apply(cardNumber, user); //task 23
+
     }
 }
